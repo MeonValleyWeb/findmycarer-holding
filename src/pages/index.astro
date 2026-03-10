@@ -128,6 +128,11 @@ const description =
         filter: brightness(1.04);
       }
 
+      button:disabled {
+        opacity: 0.75;
+        cursor: not-allowed;
+      }
+
       .note {
         margin: 0.2rem 0 0;
         font-size: 0.87rem;
@@ -196,11 +201,13 @@ const description =
       const emailInput = document.getElementById("email");
       const statusNode = document.getElementById("status");
 
-      form?.addEventListener("submit", (event) => {
+      form?.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const email = emailInput instanceof HTMLInputElement ? emailInput.value.trim() : "";
         const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const submitButton =
+          form instanceof HTMLFormElement ? form.querySelector('button[type="submit"]') : null;
 
         if (!validEmail) {
           if (statusNode instanceof HTMLElement) {
@@ -213,12 +220,41 @@ const description =
           return;
         }
 
-        if (statusNode instanceof HTMLElement) {
-          statusNode.textContent = "Thanks. You are on the beta interest list.";
-          statusNode.className = "status success";
+        if (submitButton instanceof HTMLButtonElement) {
+          submitButton.disabled = true;
+          submitButton.textContent = "Submitting...";
         }
-        if (form instanceof HTMLFormElement) {
-          form.reset();
+
+        try {
+          const response = await fetch("/api/subscribe", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email })
+          });
+
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+
+          if (statusNode instanceof HTMLElement) {
+            statusNode.textContent = "Thanks. You are on the beta interest list.";
+            statusNode.className = "status success";
+          }
+          if (form instanceof HTMLFormElement) {
+            form.reset();
+          }
+        } catch (error) {
+          if (statusNode instanceof HTMLElement) {
+            statusNode.textContent = "Could not submit right now. Please try again.";
+            statusNode.className = "status error";
+          }
+        } finally {
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Notify me";
+          }
         }
       });
     </script>
