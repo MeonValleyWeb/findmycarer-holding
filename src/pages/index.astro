@@ -1,0 +1,226 @@
+---
+const title = "Find My Carer | Beta";
+const description =
+  "Find My Carer is currently in beta. Join the email list for launch updates and early access.";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <style>
+      :root {
+        --font-sans: Geist, "Avenir Next", "Segoe UI", sans-serif;
+        --blue-light: #60beff;
+        --blue: #1da8ff;
+        --blue-dark: #007bff;
+        --green: #00c172;
+        --base-50: #f8f8f8;
+        --base-100: #f1f1f1;
+        --base-300: #ddd;
+        --base-600: #666;
+        --base-900: #242424;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: var(--font-sans);
+        color: var(--base-900);
+        background:
+          radial-gradient(circle at top left, rgba(29, 168, 255, 0.2), transparent 36%),
+          radial-gradient(circle at bottom right, rgba(0, 193, 114, 0.12), transparent 40%),
+          linear-gradient(160deg, #fff, var(--base-50));
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 760px;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(4px);
+        border: 1px solid var(--base-300);
+        border-radius: 20px;
+        padding: clamp(1.25rem, 3vw, 2.5rem);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        color: var(--blue-dark);
+        background: rgba(29, 168, 255, 0.12);
+        border: 1px solid rgba(29, 168, 255, 0.35);
+        border-radius: 999px;
+        padding: 0.4rem 0.75rem;
+      }
+
+      h1 {
+        margin: 1rem 0 0.6rem;
+        font-size: clamp(1.7rem, 5vw, 2.65rem);
+        line-height: 1.1;
+      }
+
+      .lead {
+        margin: 0;
+        color: var(--base-600);
+        font-size: clamp(1rem, 2.2vw, 1.125rem);
+        line-height: 1.55;
+      }
+
+      .points {
+        margin: 1.1rem 0 1.5rem;
+        padding-left: 1rem;
+        color: var(--base-600);
+        line-height: 1.6;
+      }
+
+      form {
+        display: grid;
+        gap: 0.8rem;
+      }
+
+      .field {
+        width: 100%;
+        border: 1px solid #cfcfcf;
+        border-radius: 12px;
+        padding: 0.85rem 0.95rem;
+        font-size: 1rem;
+      }
+
+      .field:focus {
+        outline: 2px solid rgba(29, 168, 255, 0.4);
+        border-color: var(--blue);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.6rem;
+      }
+
+      button {
+        border: 0;
+        border-radius: 12px;
+        padding: 0.85rem 1.1rem;
+        font-size: 0.97rem;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(130deg, var(--blue), var(--blue-dark));
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      button:hover {
+        filter: brightness(1.04);
+      }
+
+      .note {
+        margin: 0.2rem 0 0;
+        font-size: 0.87rem;
+        color: var(--base-600);
+      }
+
+      .status {
+        margin: 0.45rem 0 0;
+        font-size: 0.92rem;
+        min-height: 1.2rem;
+      }
+
+      .status.success {
+        color: var(--green);
+      }
+
+      .status.error {
+        color: #ba1a1a;
+      }
+
+      @media (max-width: 620px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <p class="badge">Now in beta</p>
+      <h1>Find My Carer is in Beta.</h1>
+      <p class="lead">
+        We are actively building and testing the platform to make it easier for people to connect
+        with trusted care support.
+      </p>
+
+      <ul class="points">
+        <li>Early access opportunities for beta subscribers</li>
+        <li>Product updates as features are released</li>
+        <li>Priority invitation when we open more places</li>
+      </ul>
+
+      <form id="beta-signup-form" novalidate>
+        <label for="email">Join the beta mailing list</label>
+        <div class="form-row">
+          <input
+            class="field"
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="you@example.com"
+            required
+          />
+          <button type="submit">Notify me</button>
+        </div>
+        <p class="note">
+          We will only email you about Find My Carer beta updates.
+        </p>
+        <p id="status" class="status" aria-live="polite"></p>
+      </form>
+    </main>
+
+    <script>
+      const form = document.getElementById("beta-signup-form");
+      const emailInput = document.getElementById("email");
+      const statusNode = document.getElementById("status");
+
+      form?.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const email = emailInput instanceof HTMLInputElement ? emailInput.value.trim() : "";
+        const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        if (!validEmail) {
+          if (statusNode instanceof HTMLElement) {
+            statusNode.textContent = "Please enter a valid email address.";
+            statusNode.className = "status error";
+          }
+          if (emailInput instanceof HTMLInputElement) {
+            emailInput.focus();
+          }
+          return;
+        }
+
+        if (statusNode instanceof HTMLElement) {
+          statusNode.textContent = "Thanks. You are on the beta interest list.";
+          statusNode.className = "status success";
+        }
+        if (form instanceof HTMLFormElement) {
+          form.reset();
+        }
+      });
+    </script>
+  </body>
+</html>
