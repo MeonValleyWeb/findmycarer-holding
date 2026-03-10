@@ -13,15 +13,9 @@ const description =
     <style>
       :root {
         --font-sans: Geist, "Avenir Next", "Segoe UI", sans-serif;
-        --blue-light: #60beff;
         --blue: #1da8ff;
         --blue-dark: #007bff;
         --green: #00c172;
-        --base-50: #f8f8f8;
-        --base-100: #f1f1f1;
-        --base-300: #ddd;
-        --base-600: #666;
-        --base-900: #242424;
       }
 
       * {
@@ -29,28 +23,100 @@ const description =
       }
 
       body {
+        --page-bg:
+          radial-gradient(circle at top left, rgba(29, 168, 255, 0.14), transparent 34%),
+          radial-gradient(circle at bottom right, rgba(0, 193, 114, 0.08), transparent 38%),
+          linear-gradient(160deg, #070b14, #0b1220);
+        --card-bg: rgba(12, 18, 34, 0.82);
+        --card-border: rgba(148, 163, 184, 0.24);
+        --text-strong: #f8fafc;
+        --text-muted: #cbd5e1;
+        --about-bg: rgba(15, 23, 42, 0.7);
+        --about-border: rgba(148, 163, 184, 0.28);
+        --input-bg: #0f172a;
+        --input-border: #334155;
+        --input-text: #f8fafc;
         margin: 0;
         min-height: 100vh;
         font-family: var(--font-sans);
-        color: var(--base-900);
-        background:
-          radial-gradient(circle at top left, rgba(29, 168, 255, 0.2), transparent 36%),
-          radial-gradient(circle at bottom right, rgba(0, 193, 114, 0.12), transparent 40%),
-          linear-gradient(160deg, #fff, var(--base-50));
+        color: var(--text-strong);
+        background: var(--page-bg);
         display: grid;
         place-items: center;
         padding: 1.5rem;
+        transition: background 180ms ease, color 180ms ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      body[data-theme="light"] {
+        --page-bg:
+          radial-gradient(circle at top left, rgba(29, 168, 255, 0.2), transparent 36%),
+          radial-gradient(circle at bottom right, rgba(0, 193, 114, 0.12), transparent 40%),
+          linear-gradient(160deg, #fff, #f8fafc);
+        --card-bg: rgba(255, 255, 255, 0.88);
+        --card-border: #dbe3ef;
+        --text-strong: #0f172a;
+        --text-muted: #475569;
+        --about-bg: rgba(255, 255, 255, 0.78);
+        --about-border: #dbe3ef;
+        --input-bg: #ffffff;
+        --input-border: #cbd5e1;
+        --input-text: #0f172a;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::before {
+        background:
+          repeating-linear-gradient(
+            115deg,
+            rgba(148, 163, 184, 0.045) 0px,
+            rgba(148, 163, 184, 0.045) 1px,
+            transparent 1px,
+            transparent 32px
+          ),
+          repeating-linear-gradient(
+            25deg,
+            rgba(29, 168, 255, 0.035) 0px,
+            rgba(29, 168, 255, 0.035) 1px,
+            transparent 1px,
+            transparent 44px
+          );
+      }
+
+      body::after {
+        background:
+          radial-gradient(circle at 15% 80%, rgba(29, 168, 255, 0.07), transparent 34%),
+          radial-gradient(circle at 85% 20%, rgba(148, 163, 184, 0.06), transparent 36%);
       }
 
       .card {
+        position: relative;
+        z-index: 1;
         width: 100%;
         max-width: 760px;
-        background: rgba(255, 255, 255, 0.88);
+        background: var(--card-bg);
         backdrop-filter: blur(4px);
-        border: 1px solid var(--base-300);
+        border: 1px solid var(--card-border);
         border-radius: 20px;
         padding: clamp(1.25rem, 3vw, 2.5rem);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+        margin-bottom: 0.9rem;
       }
 
       .badge {
@@ -68,23 +134,59 @@ const description =
         padding: 0.4rem 0.75rem;
       }
 
+      .theme-toggle {
+        border: 1px solid var(--card-border);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--text-strong);
+        padding: 0.45rem 0.75rem;
+        font-size: 0.83rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        cursor: pointer;
+      }
+
       h1 {
-        margin: 1rem 0 0.6rem;
+        margin: 0 0 0.6rem;
         font-size: clamp(1.7rem, 5vw, 2.65rem);
         line-height: 1.1;
+        color: var(--text-strong);
       }
 
       .lead {
         margin: 0;
-        color: var(--base-600);
+        color: var(--text-muted);
         font-size: clamp(1rem, 2.2vw, 1.125rem);
         line-height: 1.55;
       }
 
+      .about {
+        margin: 1rem 0 1.1rem;
+        padding: 1rem;
+        border: 1px solid var(--about-border);
+        border-radius: 14px;
+        background: var(--about-bg);
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      .about strong {
+        color: var(--text-strong);
+      }
+
+      .goals-title {
+        margin: 0 0 0.55rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-strong);
+      }
+
       .points {
-        margin: 1.1rem 0 1.5rem;
+        margin: 0 0 1.5rem;
         padding-left: 1rem;
-        color: var(--base-600);
+        color: var(--text-muted);
         line-height: 1.6;
       }
 
@@ -93,12 +195,56 @@ const description =
         gap: 0.8rem;
       }
 
+      .signup-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 230px;
+        gap: 0.9rem;
+        align-items: stretch;
+      }
+
+      .art-panel {
+        border: 1px solid var(--about-border);
+        border-radius: 14px;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 230px;
+      }
+
+      .art-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(1) contrast(1.12) brightness(0.9);
+        opacity: 0.9;
+      }
+
+      body[data-theme="light"] .art-image {
+        filter: grayscale(1) contrast(1.08) brightness(0.95);
+      }
+
+      .art-panel.is-missing::before {
+        content: "Add public/care-illustration.webp";
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        padding: 0 0.75rem;
+        text-align: center;
+      }
+
+      .art-panel.is-missing .art-image {
+        display: none;
+      }
+
       .field {
         width: 100%;
-        border: 1px solid #cfcfcf;
+        border: 1px solid var(--input-border);
         border-radius: 12px;
         padding: 0.85rem 0.95rem;
         font-size: 1rem;
+        color: var(--input-text);
+        background: var(--input-bg);
       }
 
       .field:focus {
@@ -112,7 +258,7 @@ const description =
         gap: 0.6rem;
       }
 
-      button {
+      .cta-button {
         border: 0;
         border-radius: 12px;
         padding: 0.85rem 1.1rem;
@@ -124,11 +270,11 @@ const description =
         white-space: nowrap;
       }
 
-      button:hover {
+      .cta-button:hover {
         filter: brightness(1.04);
       }
 
-      button:disabled {
+      .cta-button:disabled {
         opacity: 0.75;
         cursor: not-allowed;
       }
@@ -136,7 +282,7 @@ const description =
       .note {
         margin: 0.2rem 0 0;
         font-size: 0.87rem;
-        color: var(--base-600);
+        color: var(--text-muted);
       }
 
       .status {
@@ -154,6 +300,14 @@ const description =
       }
 
       @media (max-width: 620px) {
+        .signup-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .art-panel {
+          min-height: 180px;
+        }
+
         .form-row {
           grid-template-columns: 1fr;
         }
@@ -162,44 +316,118 @@ const description =
   </head>
   <body>
     <main class="card">
-      <p class="badge">Now in beta</p>
+      <div class="topbar">
+        <p class="badge">Now in beta</p>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span id="theme-icon" aria-hidden="true">🌙</span>
+          <span id="theme-label">Night mode</span>
+        </button>
+      </div>
       <h1>Find My Carer is in Beta.</h1>
       <p class="lead">
         We are actively building and testing the platform to make it easier for people to connect
         with trusted care support.
       </p>
 
+      <section class="about" aria-label="About Find My Carer beta">
+        <p>
+          A bespoke UK carer platform connecting private families, care homes, and agencies with
+          qualified care professionals. Built for quality over quantity: paid listings, thorough
+          role descriptions, and verified carer profiles.
+        </p>
+      </section>
+
+      <h2 class="goals-title">Goals</h2>
       <ul class="points">
-        <li>Early access opportunities for beta subscribers</li>
-        <li>Product updates as features are released</li>
-        <li>Priority invitation when we open more places</li>
+        <li>Provide a curated alternative to high-volume job boards like Indeed</li>
+        <li>Paid job listings to create a meaningful barrier to entry for employers</li>
+        <li>Require thorough, genuine role descriptions with no keyword-stuffed spam</li>
+        <li>Carer profiles that demonstrate real experience and qualifications</li>
+        <li>UK-focused details: GBP salaries, DBS checks, NVQ qualifications, UK care terminology</li>
+        <li>
+          Serve private families, care homes, domiciliary agencies, and supported living providers
+        </li>
       </ul>
 
-      <form id="beta-signup-form" novalidate>
-        <label for="email">Join the beta mailing list</label>
-        <div class="form-row">
-          <input
-            class="field"
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            placeholder="you@example.com"
-            required
+      <div class="signup-grid">
+        <form id="beta-signup-form" novalidate>
+          <label for="email">Join the beta mailing list</label>
+          <div class="form-row">
+            <input
+              class="field"
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required
+            />
+            <button class="cta-button" type="submit">Notify me</button>
+          </div>
+          <p class="note">
+            We will only email you about Find My Carer beta updates.
+          </p>
+          <p id="status" class="status" aria-live="polite"></p>
+        </form>
+        <aside id="art-panel" class="art-panel" aria-label="Carer and client illustration">
+          <img
+            id="care-art"
+            class="art-image"
+            src="/care-illustration.webp"
+            alt="Care professional supporting an older client"
           />
-          <button type="submit">Notify me</button>
-        </div>
-        <p class="note">
-          We will only email you about Find My Carer beta updates.
-        </p>
-        <p id="status" class="status" aria-live="polite"></p>
-      </form>
+        </aside>
+      </div>
     </main>
 
     <script>
       const form = document.getElementById("beta-signup-form");
       const emailInput = document.getElementById("email");
       const statusNode = document.getElementById("status");
+      const artImage = document.getElementById("care-art");
+      const artPanel = document.getElementById("art-panel");
+      const themeToggle = document.getElementById("theme-toggle");
+      const themeLabel = document.getElementById("theme-label");
+      const themeIcon = document.getElementById("theme-icon");
+
+      const getTimeBasedTheme = () => {
+        const hour = new Date().getHours();
+        return hour >= 19 || hour < 7 ? "dark" : "light";
+      };
+
+      const applyTheme = (theme) => {
+        document.body.setAttribute("data-theme", theme);
+        if (themeLabel instanceof HTMLElement) {
+          themeLabel.textContent = theme === "dark" ? "Night mode" : "Day mode";
+        }
+        if (themeIcon instanceof HTMLElement) {
+          themeIcon.textContent = theme === "dark" ? "🌙" : "☀️";
+        }
+      };
+
+      let initialTheme = getTimeBasedTheme();
+      try {
+        const savedTheme = localStorage.getItem("site-theme");
+        if (savedTheme === "dark" || savedTheme === "light") {
+          initialTheme = savedTheme;
+        }
+      } catch {}
+      applyTheme(initialTheme);
+
+      themeToggle?.addEventListener("click", () => {
+        const currentTheme = document.body.getAttribute("data-theme") === "dark" ? "dark" : "light";
+        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        applyTheme(nextTheme);
+        try {
+          localStorage.setItem("site-theme", nextTheme);
+        } catch {}
+      });
+
+      artImage?.addEventListener("error", () => {
+        if (artPanel instanceof HTMLElement) {
+          artPanel.classList.add("is-missing");
+        }
+      });
 
       form?.addEventListener("submit", async (event) => {
         event.preventDefault();
