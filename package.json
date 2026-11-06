@@ -13,5 +13,10 @@
   "dependencies": {
     "@astrojs/vercel": "^11.0.16",
     "astro": "^7.4.2"
+  },
+  "overrides": {
+    "@vercel/routing-utils": {
+      "path-to-regexp": "6.3.0"
+    }
   }
 }
